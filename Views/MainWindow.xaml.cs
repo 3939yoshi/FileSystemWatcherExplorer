@@ -9,7 +9,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace FileSystemWatcherExplorer
+
+namespace FileSystemWatcherExplorer.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -20,5 +21,6 @@ namespace FileSystemWatcherExplorer
         {
             InitializeComponent();
         }
+
     }
 }

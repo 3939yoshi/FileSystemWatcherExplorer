@@ -1,0 +1,146 @@
+﻿<Window x:Class="FileSystemWatcherExplorer.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FileSystemWatcherExplorer"
+        mc:Ignorable="d"
+        Title= "{Binding Title}" Height="500" Width="800"
+        xmlns:prism="http://prismlibrary.com/"
+        prism:ViewModelLocator.AutoWireViewModel="True">
+    <DockPanel>
+        <Grid DockPanel.Dock="Top" Width="600" Height="130">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <CheckBox Grid.Column="1" Content="EnableRaisingEvents"/>
+            
+            <Label Grid.Row="1" Content="Filter"/>
+            <TextBox Grid.Row="1" Grid.Column="1" />
+            
+            <Label  Grid.Row="2" Content="Filters" />
+            <TextBox Grid.Row="2" Grid.Column="1"/>
+
+            <CheckBox Grid.Row="3" Grid.Column="1" Content="IncludeSubdirectories" />
+
+            <Label Grid.Row="4" Content="InternalBufferSize"/>
+            <TextBox Grid.Row="4" Grid.Column="1" />
+
+            <Label Grid.Row="5" Content="Path"/>
+            <TextBox Grid.Row="5" Grid.Column="1"/>
+            <Button  Grid.Row="5" Grid.Column="2" Content="選ぶ" Command="{Binding SelectDirectoryCommand}"/>
+
+        </Grid>
+        
+        <StackPanel DockPanel.Dock="Top">
+
+            <TextBox/>
+
+        </StackPanel>
+        
+        
+        <Grid DockPanel.Dock="Top" Width="600" Height="300">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Row="1" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <Label Content="NotifyFilters" VerticalAlignment="Center" />
+            </Border>
+            <Border Grid.Row="2" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <CheckBox  Content="FileName       1" VerticalAlignment="Center" IsChecked="{Binding NfFileName}" />
+            </Border>
+            <Border Grid.Row="3" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <CheckBox Content="DirectoryName  2" VerticalAlignment="Center" IsChecked="{Binding NfDirectoryName}"/>
+            </Border>
+            <Border Grid.Row="4" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <CheckBox Content="Attributes     4" VerticalAlignment="Center" IsChecked="{Binding NfAttributes}"/>
+            </Border>
+            <Border Grid.Row="5" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <CheckBox Content="Size           8" VerticalAlignment="Center" IsChecked="{Binding NfSize}"/>
+            </Border>
+            <Border Grid.Row="6" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <CheckBox Content="LastWrite     16" VerticalAlignment="Center" IsChecked="{Binding NfLastWrite}"/>
+            </Border>
+            <Border Grid.Row="7" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <CheckBox Content="LastAccess    32" VerticalAlignment="Center" IsChecked="{Binding NfLastAccess}"/>
+            </Border>
+            <Border Grid.Row="8" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <CheckBox Content="CreationTime  64" VerticalAlignment="Center" IsChecked="{Binding NfCreationTime}"/>
+            </Border>
+            <Border Grid.Row="9" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <CheckBox Content="Security     256" VerticalAlignment="Center" IsChecked="{Binding NfSecurity}"/>
+            </Border>
+            <!-- ************************************************************************   -->
+            <Border Grid.Column="1" Grid.ColumnSpan="4" BorderThickness="1,1,1,1" BorderBrush="Black">
+                <Label Content="WatcherChangeTypes" VerticalAlignment="Center"/>
+            </Border>
+            
+            <Border Grid.Row="1" Grid.Column="1" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <Label  Content="Created  1" VerticalAlignment="Center" />
+            </Border>
+            <Border Grid.Row="1" Grid.Column="2" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <Label Content="Deleted  2" VerticalAlignment="Center" />
+            </Border>
+            <Border Grid.Row="1" Grid.Column="3" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <Label Content="Changed  4" VerticalAlignment="Center" />
+            </Border>
+            <Border Grid.Row="1" Grid.Column="4" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <Label Content="Renamed  8" VerticalAlignment="Center" />
+            </Border>
+            <!-- -->
+            <Border Grid.Row="10" Grid.Column="1" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <Label Content="OnCreated()" VerticalAlignment="Center" />
+            </Border>
+            <Border Grid.Row="10" Grid.Column="2" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <Label Content="OnCreated()" VerticalAlignment="Center" />
+            </Border>
+            <Border Grid.Row="10" Grid.Column="3" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <Label Content="OnCreated()" VerticalAlignment="Center" />
+            </Border>
+            <Border Grid.Row="10" Grid.Column="4" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <Label Content="OnCreated()" VerticalAlignment="Center" />
+            </Border>
+            <Border Grid.Row="10" Grid.Column="5" BorderThickness="1,1,1,1" BorderBrush="Black" >
+                <Label Content="OnError()" VerticalAlignment="Center" />
+            </Border>
+
+
+        </Grid>
+
+
+        <TextBox>
+            
+        </TextBox>
+        
+    </DockPanel>
+</Window>
