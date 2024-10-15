@@ -1,6 +1,8 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -12,6 +14,8 @@ namespace FileSystemWatcherExplorer.ViewModels
 {
     internal class MainWindowViewModel : BindableBase
     {
+        #region プロパティー 非公開
+
         /// <summary>
         /// MainWindow Title
         /// </summary>
@@ -19,8 +23,16 @@ namespace FileSystemWatcherExplorer.ViewModels
 
         FileSystemWatcher _fileSystemWatcher;
 
+        private bool _enableRaisingEvents;
+        private string _filter;
+        private string _filters;
+        private bool _includeSubdirectpries;
+        private int _internalBuffersize;
+        private string _path;
 
+        private bool _isEnableChange;
 
+        private bool _currentWactherState;
 
         // NotifyFilters
         private bool _nfFileName;
@@ -31,18 +43,61 @@ namespace FileSystemWatcherExplorer.ViewModels
         private bool _nfLastAccess;
         private bool _nfCreationTime;
         private bool _nfSecurity;
+        #endregion
 
-        // 
-        
+        #region プロパティ 公開
 
 
+        public bool EnableRaisingEvents 
+        {
+            get { return _enableRaisingEvents; } 
+            set { SetProperty(ref _enableRaisingEvents, value); } 
+        }
+        public string Filter 
+        {
+            get { return _filter; } 
+            set { SetProperty(ref _filter, value); } 
+        }
+        public string Filters 
+        { 
+            get { return _filters; } 
+            set { SetProperty(ref _filters, value); } 
+        }
+        public bool IncludeSubdirectpries 
+        {
+            get { return _includeSubdirectpries; } 
+            set { SetProperty(ref _includeSubdirectpries, value); } 
+        }
+        public int InternalBuffersize 
+        {
+            get { return _internalBuffersize; } 
+            set { SetProperty(ref _internalBuffersize, value); } 
+        }
+        public string Path 
+        { 
+            get { return _path; }
+            set { SetProperty(ref _path, value); } 
+        }
 
-        public bool EnableRaisingEvents { get; set; }
-        public string Filter { get; set; }
-        public bool IncludeSubdirectpries { get; set; }
-        public int InternalBuffersize { get; set; }
-        public string Path { get; set; }
-//        public 
+
+        public bool IsEnableChange { 
+            get { return _isEnableChange; }
+            set { SetProperty(ref _isEnableChange, value); } 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool CurrentWactherState 
+        { 
+            get { return _currentWactherState; }
+            set { SetProperty(ref _currentWactherState, value); } 
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+
+
         // Nf : NotifyFilters
         public bool NfFileName      
         {
@@ -85,9 +140,16 @@ namespace FileSystemWatcherExplorer.ViewModels
             set { SetProperty(ref _nfSecurity, value); } 
         }
 
-
         public DelegateCommand SelectDirectoryCommand { get; }
+        public DelegateCommand StartWatcherCommand { get; }
+        public DelegateCommand StopWatcherCommand { get; }
 
+
+        public ObservableCollection<string> Logs { get; } = new ObservableCollection<string>();
+
+        #endregion
+
+        #region メソッド 公開
 
         // Wct : WatcherChangeTypes 
         /// <summary>
@@ -102,10 +164,13 @@ namespace FileSystemWatcherExplorer.ViewModels
 
             EnableRaisingEvents = _fileSystemWatcher.EnableRaisingEvents;
             Filter = _fileSystemWatcher.Filter;
+            Filters = string.Join(';' ,_fileSystemWatcher.Filters);
+
             IncludeSubdirectpries = _fileSystemWatcher.IncludeSubdirectories;
             InternalBuffersize = _fileSystemWatcher.InternalBufferSize;
-            
-            NfFileName      = (_fileSystemWatcher.NotifyFilter & NotifyFilters.FileName) !=0 ? true : false;
+            Path = _fileSystemWatcher.Path;
+
+            NfFileName = (_fileSystemWatcher.NotifyFilter & NotifyFilters.FileName) !=0 ? true : false;
             NfDirectoryName = (_fileSystemWatcher.NotifyFilter & NotifyFilters.DirectoryName) != 0 ? true : false;
             NfAttributes    = (_fileSystemWatcher.NotifyFilter & NotifyFilters.Attributes) != 0 ? true : false;
             NfSize          = (_fileSystemWatcher.NotifyFilter & NotifyFilters.Size) != 0 ? true : false;
@@ -114,8 +179,7 @@ namespace FileSystemWatcherExplorer.ViewModels
             NfCreationTime  = (_fileSystemWatcher.NotifyFilter & NotifyFilters.CreationTime) != 0 ? true : false;
             NfSecurity      = (_fileSystemWatcher.NotifyFilter & NotifyFilters.Security) != 0 ? true : false;
             //
-            Path = _fileSystemWatcher.Path;
-
+            Path = @"D:\AA\BB\CC";
 
             _fileSystemWatcher.Changed += Fsw_Changed;
             _fileSystemWatcher.Created += Fsw_Created;
@@ -125,65 +189,171 @@ namespace FileSystemWatcherExplorer.ViewModels
 
             // 
             SelectDirectoryCommand = new DelegateCommand(SelectDirectoryExecute);
+            StartWatcherCommand = new DelegateCommand(StartWatcherExecute);
+            StopWatcherCommand = new DelegateCommand(StopWatcherExecute);
 
-
+            IsEnableChange = ! CurrentWactherState;
+            AddLog("コンストラクタ完了");
         }
+        #endregion
+
+        #region メソッド非公開
 
 
-
-        private void UpdateSetting()
+        private void AddLog(string Log)
         {
-            CommonOpenFileDialog cod = new CommonOpenFileDialog();
-
-
+            System.Windows.Application.Current.Dispatcher.Invoke(new Action(() => 
+            {
+                Logs.Add(Log);
+            }));
         }
+        private void AddLog(StringBuilder sb)
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                foreach (var item in sb.ToString().Split("\r\n"))
+                {
+                    Logs.Add(item);
+                };
+            }));
+        }
+
+        private void Fsw_Created(object sender, FileSystemEventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            FileInfo info = new FileInfo(e.FullPath);
+
+            sb.AppendLine($"Created {e.ChangeType}  {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}");
+            sb.AppendLine($"    FilePath {e.FullPath}");
+            sb.AppendLine($"    CreationTime  {info.CreationTime}");
+            sb.AppendLine($"    LastWriteTime {info.LastWriteTime}");
+            // sb.AppendLine($"    Length        {info.Length}");
+            AddLog(sb);
+            Debug.Write(sb);
+        }
+
 
         private void Fsw_Changed(object sender, FileSystemEventArgs e ) 
         {
-            Debug.WriteLine($"Changed {e.ChangeType}");
-        }
-        private void Fsw_Created(object sender, FileSystemEventArgs e) 
-        {
-            Debug.WriteLine($"Created {e.ChangeType}");
+            StringBuilder sb = new StringBuilder();
+            FileInfo info = new FileInfo(e.FullPath);
+            sb.AppendLine($"Changed {e.ChangeType}  {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}");
+            sb.AppendLine($"    FilePath {e.FullPath}");
+            sb.AppendLine($"    CreationTime  {info.CreationTime}");
+            sb.AppendLine($"    LastWriteTime {info.LastWriteTime}");
+            // sb.AppendLine($"    Length        {info.Length}");  例外は発生することがある。
+            AddLog(sb);
+            Debug.Write(sb);
+
         }
         private void Fsw_Deleted(object sender, FileSystemEventArgs e) 
         {
-            Debug.WriteLine($"Deleted {e.ChangeType}");
+            // AddLog("Deleted");
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Deleted {e.ChangeType}  {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}");
+            sb.AppendLine($"    FilePath {e.FullPath}");
+            AddLog(sb);
+            Debug.Write(sb);
         }
         private void Fsw_Renamed(object sender, RenamedEventArgs e) 
         {
-            Debug.WriteLine($"Reanmed {e.ChangeType}");
+            // AddLog("Renamed");
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Renamed {e.ChangeType}  {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}");
+            sb.AppendLine($"    FullPath {e.FullPath}");
+            sb.AppendLine($"    OldFullath {e.OldFullPath}");
+            AddLog(sb);
+            Debug.Write(sb);
         }
         private void Fsw_Error(object sender,ErrorEventArgs e) 
         {
-            Debug.WriteLine($"Error {e.GetException().Message}");
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Error {e.GetException().Message} {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} ");
+            AddLog(sb);
+            Debug.WriteLine(sb);
         }
 
 
+        /// <summary>
+        /// フォルダ選択コマンドを実行する。
+        /// </summary>
         private void SelectDirectoryExecute( )
         {
-
-
             using (CommonOpenFileDialog cofd = new CommonOpenFileDialog())
             {
                 cofd.Title = "監視する";
                 cofd.IsFolderPicker = true;   // ホルダ選択モードにする。 
 
-
                 CommonFileDialogResult result = cofd.ShowDialog();
                 if(result == CommonFileDialogResult.Ok)
                 {
                     Path = cofd.FileName;
-
                 }
+            }
+        }
 
+        private void UpdateSetting()
+        {
+            try
+            {
+                _fileSystemWatcher.EnableRaisingEvents = false;
+                _fileSystemWatcher.Filter = Filter;
+
+                _fileSystemWatcher.Filters.Clear();
+                _fileSystemWatcher.Filters.AddRange(Filters.Split(';').Select(s => s.Trim()).Where(s => !string.IsNullOrEmpty(s)));
+
+                _fileSystemWatcher.IncludeSubdirectories = IncludeSubdirectpries;
+                _fileSystemWatcher.InternalBufferSize = InternalBuffersize;
+                InternalBuffersize = _fileSystemWatcher.InternalBufferSize;
+                _fileSystemWatcher.Path = Path;
+                //
+                NotifyFilters notifyFilters = 0;
+                notifyFilters |= NfFileName ? NotifyFilters.FileName : 0;
+                notifyFilters |= NfDirectoryName ? NotifyFilters.DirectoryName : 0;
+                notifyFilters |= NfAttributes ? NotifyFilters.Attributes : 0;
+                notifyFilters |= NfSize ? NotifyFilters.Size : 0;
+                notifyFilters |= NfLastWrite ? NotifyFilters.LastWrite : 0;
+                notifyFilters |= NfLastAccess ? NotifyFilters.LastAccess : 0;
+                notifyFilters |= NfCreationTime ? NotifyFilters.CreationTime : 0;
+                notifyFilters |= NfSecurity ? NotifyFilters.Security  : 0;
+                _fileSystemWatcher.NotifyFilter = notifyFilters;
+
+                //
+                EnableRaisingEvents = true;
+                _fileSystemWatcher.EnableRaisingEvents = EnableRaisingEvents;
+                IsEnableChange = false;
+            }
+            catch(Exception ex)
+            {
+                AddLog($"ERROR： {ex.Message}");                
+            }
+            finally
+            {
 
             }
 
+        }
+        private void StartWatcherExecute() 
+        {
+            AddLog("StartWatcherExecute()");
+            Debug.WriteLine("StartWatcherExecute()");
 
+            UpdateSetting();
+
+            CurrentWactherState = _fileSystemWatcher.EnableRaisingEvents;
+            IsEnableChange = !CurrentWactherState;
+        }
+        private void StopWatcherExecute() 
+        {
+            AddLog("StopWatcherExecute()");
+            Debug.WriteLine("StopWatcherExecute()");
+            EnableRaisingEvents = false;
+            _fileSystemWatcher.EnableRaisingEvents = EnableRaisingEvents;
+            CurrentWactherState = false;
+            IsEnableChange = true;
         }
 
-
-
+        #endregion
     }
 }

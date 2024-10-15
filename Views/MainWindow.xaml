@@ -4,11 +4,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FileSystemWatcherExplorer"
+        xmlns:converter="clr-namespace:FileSystemWatcherExplorer.Converters"
         mc:Ignorable="d"
-        Title= "{Binding Title}" Height="500" Width="800"
+        Title= "{Binding Title}" Height="800" Width="800"
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True">
+    <Window.Resources>
+        <converter:WatcherConverter  x:Key="WatcherConverter"/>
+    </Window.Resources>
+    
     <DockPanel>
+        <Menu DockPanel.Dock="Top" >
+            <MenuItem Header="File">
+                <MenuItem Header="Exit"/>
+            </MenuItem>
+        </Menu>
         <Grid DockPanel.Dock="Top" Width="600" Height="130">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -24,22 +34,22 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <CheckBox Grid.Column="1" Content="EnableRaisingEvents"/>
+            <CheckBox Grid.Column="1" Content="EnableRaisingEvents" IsChecked="{Binding EnableRaisingEvents}" IsEnabled="False"/>
             
             <Label Grid.Row="1" Content="Filter"/>
-            <TextBox Grid.Row="1" Grid.Column="1" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Filter}" IsEnabled="{Binding IsEnableChange}"/>
             
             <Label  Grid.Row="2" Content="Filters" />
-            <TextBox Grid.Row="2" Grid.Column="1"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Filters}" IsEnabled="{Binding IsEnableChange}"/>
 
-            <CheckBox Grid.Row="3" Grid.Column="1" Content="IncludeSubdirectories" />
+            <CheckBox Grid.Row="3" Grid.Column="1" Content="IncludeSubdirectories" IsChecked="{Binding IncludeSubdirectories}" IsEnabled="{Binding IsEnableChange}"/>
 
             <Label Grid.Row="4" Content="InternalBufferSize"/>
-            <TextBox Grid.Row="4" Grid.Column="1" />
+            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding InternalBuffersize}" IsEnabled="{Binding IsEnableChange}"/>
 
             <Label Grid.Row="5" Content="Path"/>
-            <TextBox Grid.Row="5" Grid.Column="1"/>
-            <Button  Grid.Row="5" Grid.Column="2" Content="選ぶ" Command="{Binding SelectDirectoryCommand}"/>
+            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Path}" IsEnabled="{Binding IsEnableChange}"/>
+            <Button  Grid.Row="5" Grid.Column="2" Content="選ぶ" Command="{Binding SelectDirectoryCommand}" IsEnabled="{Binding IsEnableChange}"/>
 
         </Grid>
         
@@ -65,7 +75,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="2*"/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -77,34 +87,34 @@
                 <Label Content="NotifyFilters" VerticalAlignment="Center" />
             </Border>
             <Border Grid.Row="2" BorderThickness="1,1,1,1" BorderBrush="Black" >
-                <CheckBox  Content="FileName       1" VerticalAlignment="Center" IsChecked="{Binding NfFileName}" />
+                <CheckBox  Content="FileName       1 *" VerticalAlignment="Center" IsChecked="{Binding NfFileName}" IsEnabled="{Binding IsEnableChange}"/>
             </Border>
             <Border Grid.Row="3" BorderThickness="1,1,1,1" BorderBrush="Black" >
-                <CheckBox Content="DirectoryName  2" VerticalAlignment="Center" IsChecked="{Binding NfDirectoryName}"/>
+                <CheckBox Content="DirectoryName  2 *" VerticalAlignment="Center" IsChecked="{Binding NfDirectoryName}" IsEnabled="{Binding IsEnableChange}"/>
             </Border>
             <Border Grid.Row="4" BorderThickness="1,1,1,1" BorderBrush="Black" >
-                <CheckBox Content="Attributes     4" VerticalAlignment="Center" IsChecked="{Binding NfAttributes}"/>
+                <CheckBox Content="Attributes     4" VerticalAlignment="Center" IsChecked="{Binding NfAttributes}" IsEnabled="{Binding IsEnableChange}"/>
             </Border>
             <Border Grid.Row="5" BorderThickness="1,1,1,1" BorderBrush="Black" >
-                <CheckBox Content="Size           8" VerticalAlignment="Center" IsChecked="{Binding NfSize}"/>
+                <CheckBox Content="Size           8" VerticalAlignment="Center" IsChecked="{Binding NfSize}" IsEnabled="{Binding IsEnableChange}"/>
             </Border>
             <Border Grid.Row="6" BorderThickness="1,1,1,1" BorderBrush="Black" >
-                <CheckBox Content="LastWrite     16" VerticalAlignment="Center" IsChecked="{Binding NfLastWrite}"/>
+                <CheckBox Content="LastWrite     16 *" VerticalAlignment="Center" IsChecked="{Binding NfLastWrite}" IsEnabled="{Binding IsEnableChange}"/>
             </Border>
             <Border Grid.Row="7" BorderThickness="1,1,1,1" BorderBrush="Black" >
-                <CheckBox Content="LastAccess    32" VerticalAlignment="Center" IsChecked="{Binding NfLastAccess}"/>
+                <CheckBox Content="LastAccess    32" VerticalAlignment="Center" IsChecked="{Binding NfLastAccess}" IsEnabled="{Binding IsEnableChange}"/>
             </Border>
             <Border Grid.Row="8" BorderThickness="1,1,1,1" BorderBrush="Black" >
-                <CheckBox Content="CreationTime  64" VerticalAlignment="Center" IsChecked="{Binding NfCreationTime}"/>
+                <CheckBox Content="CreationTime  64" VerticalAlignment="Center" IsChecked="{Binding NfCreationTime}" IsEnabled="{Binding IsEnableChange}" />
             </Border>
             <Border Grid.Row="9" BorderThickness="1,1,1,1" BorderBrush="Black" >
-                <CheckBox Content="Security     256" VerticalAlignment="Center" IsChecked="{Binding NfSecurity}"/>
+                <CheckBox Content="Security     256" VerticalAlignment="Center" IsChecked="{Binding NfSecurity}" IsEnabled="{Binding IsEnableChange}"/>
             </Border>
             <!-- ************************************************************************   -->
             <Border Grid.Column="1" Grid.ColumnSpan="4" BorderThickness="1,1,1,1" BorderBrush="Black">
                 <Label Content="WatcherChangeTypes" VerticalAlignment="Center"/>
             </Border>
-            
+
             <Border Grid.Row="1" Grid.Column="1" BorderThickness="1,1,1,1" BorderBrush="Black" >
                 <Label  Content="Created  1" VerticalAlignment="Center" />
             </Border>
@@ -134,13 +144,61 @@
                 <Label Content="OnError()" VerticalAlignment="Center" />
             </Border>
 
+            <Border Grid.Row="2" Grid.Column="1" Margin="2" Background="Aqua"/>
+            <Border Grid.Row="3" Grid.Column="1" Margin="2" Background="Aqua"/>
+            <Border Grid.Row="4" Grid.Column="1" />
+            <Border Grid.Row="5" Grid.Column="1"/>
+            <Border Grid.Row="6" Grid.Column="1"/>
+            <Border Grid.Row="7" Grid.Column="1"/>
+            <Border Grid.Row="8" Grid.Column="1"/>
+            <Border Grid.Row="9" Grid.Column="1"/>
+            <!-- -->
+            <Border Grid.Row="2" Grid.Column="2" Margin="2" Background="Aqua"/>
+            <Border Grid.Row="3" Grid.Column="2" Margin="2" Background="Aqua"/>
+            <Border Grid.Row="4" Grid.Column="2"/>
+            <Border Grid.Row="5" Grid.Column="2"/>
+            <Border Grid.Row="6" Grid.Column="2"/>
+            <Border Grid.Row="7" Grid.Column="2"/>
+            <Border Grid.Row="8" Grid.Column="2"/>
+            <Border Grid.Row="9" Grid.Column="2"/>
+            <!-- -->
+            <Border Grid.Row="2" Grid.Column="3" />
+            <Border Grid.Row="3" Grid.Column="3" Margin="2" Background="LightPink"/>
+            <Border Grid.Row="4" Grid.Column="3" Margin="2" Background="Aqua"/>
+            <Border Grid.Row="5" Grid.Column="3" Margin="2" Background="Aqua"/>
+            <Border Grid.Row="6" Grid.Column="3" Margin="2" Background="Aqua"/>
+            <Border Grid.Row="7" Grid.Column="3" Margin="2" Background="Aqua"/>
+            <Border Grid.Row="8" Grid.Column="3" Margin="2" Background="Aqua"/>
+            <Border Grid.Row="9" Grid.Column="3" Margin="2" Background="Aqua"/>
+            <!-- -->
+            <Border Grid.Row="2" Grid.Column="4" Margin="2" Background="Aqua"/>
+            <Border Grid.Row="3" Grid.Column="4" Margin="2" Background="Aqua"/>
+            <Border Grid.Row="4" Grid.Column="4"/>
+            <Border Grid.Row="5" Grid.Column="4"/>
+            <Border Grid.Row="6" Grid.Column="4"/>
+            <Border Grid.Row="7" Grid.Column="4"/>
+            <Border Grid.Row="8" Grid.Column="4"/>
+            <Border Grid.Row="9" Grid.Column="4"/>
+
+        </Grid>
+
+        <Grid DockPanel.Dock="Top" Width="300">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Label Content="{Binding CurrentWactherState, Converter={StaticResource WatcherConverter}}" />
+            <Button Grid.Column="1" Content="開始" Margin="10" Command="{Binding StartWatcherCommand}"/>
+            <Button Grid.Column="2" Content="停止" Margin="10" Command="{Binding StopWatcherCommand}"/>
 
         </Grid>
 
 
-        <TextBox>
-            
-        </TextBox>
-        
+        <Border DockPanel.Dock="Top">
+            <ListBox x:Name="listBox1" ItemsSource="{Binding Logs, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True}" 
+                      TargetUpdated="ListBox_TargetUpdated"/>
+        </Border>
+ 
     </DockPanel>
 </Window>
