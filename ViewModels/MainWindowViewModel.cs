@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Shapes;
 
 
 namespace FileSystemWatcherExplorer.ViewModels
@@ -354,6 +355,49 @@ namespace FileSystemWatcherExplorer.ViewModels
             IsEnableChange = true;
         }
 
+        // ファイルが存在して非ロックか。
+        private static bool IsFileExistsAndUnlocked(string path, out string falseMessage)
+        {
+            falseMessage = string.Empty;
+            FileStream? stream = null;
+            if (! File.Exists(path))
+            {
+                falseMessage = "File.Exiets() is false.";
+                return false; 
+            }
+            try
+            {
+                stream = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+            }
+            catch(DirectoryNotFoundException e)
+            {
+                falseMessage = e.Message;
+                return false;
+            }
+            catch(FileNotFoundException e)
+            {
+                falseMessage = e.Message;
+                return false;
+            }
+            catch(IOException e)
+            {
+                falseMessage = e.Message;
+                return false;
+            }
+            catch(Exception e)
+            {
+                falseMessage = e.Message;
+                return false;
+            }
+            finally
+            {
+                if (stream != null)
+                {
+                    stream.Close();
+                }
+            }
+            return true;
+        }
         #endregion
     }
 }
