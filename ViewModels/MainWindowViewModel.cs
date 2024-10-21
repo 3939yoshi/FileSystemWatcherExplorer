@@ -194,7 +194,8 @@ namespace FileSystemWatcherExplorer.ViewModels
             StopWatcherCommand = new DelegateCommand(StopWatcherExecute);
 
             IsEnableChange = ! CurrentWactherState;
-            AddLog("コンストラクタ完了");
+            int id = System.Threading.Thread.CurrentThread.ManagedThreadId;
+            AddLog($"コンストラクタ完了  ThreadId = {id}");
         }
         #endregion
 
@@ -221,14 +222,20 @@ namespace FileSystemWatcherExplorer.ViewModels
 
         private void Fsw_Created(object sender, FileSystemEventArgs e)
         {
+            string falseMessage;
+            bool isFileExistsAndUnlocked = IsFileExistsAndUnlocked(e.FullPath, out falseMessage);
             StringBuilder sb = new StringBuilder();
-            FileInfo info = new FileInfo(e.FullPath);
+            int id = System.Threading.Thread.CurrentThread.ManagedThreadId;
 
-            sb.AppendLine($"Created {e.ChangeType}  {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}");
-            sb.AppendLine($"    FilePath {e.FullPath}");
-            sb.AppendLine($"    CreationTime  {info.CreationTime}");
-            sb.AppendLine($"    LastWriteTime {info.LastWriteTime}");
-            // sb.AppendLine($"    Length        {info.Length}");
+            sb.AppendLine($"Created {e.ChangeType}  {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}  ThreadId = {id}");
+            sb.AppendLine($"    FilePath {e.FullPath}  isFileExistsAndUnlocked = {isFileExistsAndUnlocked}  {falseMessage}");
+            if (isFileExistsAndUnlocked)
+            {
+                FileInfo info = new FileInfo(e.FullPath);
+                sb.AppendLine($"    CreationTime  {info.CreationTime}");
+                sb.AppendLine($"    LastWriteTime {info.LastWriteTime}");
+                sb.AppendLine($"    Length        {info.Length}");
+            }
             AddLog(sb);
             Debug.Write(sb);
         }
@@ -236,45 +243,61 @@ namespace FileSystemWatcherExplorer.ViewModels
 
         private void Fsw_Changed(object sender, FileSystemEventArgs e ) 
         {
+            string falseMessage;
+            bool isFileExistsAndUnlocked = IsFileExistsAndUnlocked(e.FullPath, out falseMessage);
+            int id = System.Threading.Thread.CurrentThread.ManagedThreadId;
             StringBuilder sb = new StringBuilder();
-            FileInfo info = new FileInfo(e.FullPath);
-            sb.AppendLine($"Changed {e.ChangeType}  {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}");
+            sb.AppendLine($"Changed {e.ChangeType}  {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}  ThreadId = {id}");
             sb.AppendLine($"    FilePath {e.FullPath}");
-            sb.AppendLine($"    CreationTime  {info.CreationTime}");
-            sb.AppendLine($"    LastWriteTime {info.LastWriteTime}");
-            // sb.AppendLine($"    Length        {info.Length}");  例外は発生することがある。
+            if (isFileExistsAndUnlocked)
+            {
+                FileInfo info = new FileInfo(e.FullPath);
+                sb.AppendLine($"    CreationTime  {info.CreationTime}");
+                sb.AppendLine($"    LastWriteTime {info.LastWriteTime}");
+                sb.AppendLine($"    Length        {info.Length}");  // 例外は発生することがある。
+            }
             AddLog(sb);
             Debug.Write(sb);
 
         }
         private void Fsw_Deleted(object sender, FileSystemEventArgs e) 
         {
-            // AddLog("Deleted");
+            int id = System.Threading.Thread.CurrentThread.ManagedThreadId;
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Deleted {e.ChangeType}  {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}");
+            sb.AppendLine($"Deleted {e.ChangeType}  {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}  ThreadId = {id}");
             sb.AppendLine($"    FilePath {e.FullPath}");
             AddLog(sb);
             Debug.Write(sb);
         }
         private void Fsw_Renamed(object sender, RenamedEventArgs e) 
         {
-            // AddLog("Renamed");
+            string falseMessage;
+            bool isFileExistsAndUnlocked = IsFileExistsAndUnlocked(e.FullPath, out falseMessage);
+            int id = System.Threading.Thread.CurrentThread.ManagedThreadId;
+
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Renamed {e.ChangeType}  {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}");
-            sb.AppendLine($"    FullPath {e.FullPath}");
+            sb.AppendLine($"Renamed {e.ChangeType}  {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}  ThreadId = {id}");
+            sb.AppendLine($"    FullPath {e.FullPath}  isFileExistsAndUnlocked = {isFileExistsAndUnlocked}  {falseMessage}");
+            if(isFileExistsAndUnlocked)
+            {
+                FileInfo info = new FileInfo(e.FullPath);
+                sb.AppendLine($"    CreationTime  {info.CreationTime}");
+                sb.AppendLine($"    LastWriteTime {info.LastWriteTime}");
+                sb.AppendLine($"    Length        {info.Length}");  // 例外は発生することがある。
+            }
             sb.AppendLine($"    OldFullath {e.OldFullPath}");
             AddLog(sb);
             Debug.Write(sb);
         }
         private void Fsw_Error(object sender,ErrorEventArgs e) 
         {
+            int id = System.Threading.Thread.CurrentThread.ManagedThreadId;
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Error {e.GetException().Message} {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} ");
+            sb.AppendLine($"Error {e.GetException().Message} {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}  ThreadId={id}");
             AddLog(sb);
             Debug.WriteLine(sb);
         }
-
 
         /// <summary>
         /// フォルダ選択コマンドを実行する。
