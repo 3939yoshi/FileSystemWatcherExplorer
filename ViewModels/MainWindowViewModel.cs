@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Shapes;
 
 
@@ -144,7 +145,7 @@ namespace FileSystemWatcherExplorer.ViewModels
         public DelegateCommand SelectDirectoryCommand { get; }
         public DelegateCommand StartWatcherCommand { get; }
         public DelegateCommand StopWatcherCommand { get; }
-
+        public DelegateCommand ListBoxCopyCommand { get; }
 
         public ObservableCollection<string> Logs { get; } = new ObservableCollection<string>();
 
@@ -192,6 +193,7 @@ namespace FileSystemWatcherExplorer.ViewModels
             SelectDirectoryCommand = new DelegateCommand(SelectDirectoryExecute);
             StartWatcherCommand = new DelegateCommand(StartWatcherExecute);
             StopWatcherCommand = new DelegateCommand(StopWatcherExecute);
+            ListBoxCopyCommand = new DelegateCommand(ListBoxCopyExecute);
 
             IsEnableChange = ! CurrentWactherState;
             int id = System.Threading.Thread.CurrentThread.ManagedThreadId;
@@ -356,8 +358,17 @@ namespace FileSystemWatcherExplorer.ViewModels
             {
 
             }
-
         }
+
+
+        private void ListBoxCopyExecute()
+        {
+            string[] strs = Logs.ToArray();
+            Clipboard.SetText( String.Join("\n", strs ) );
+        }
+
+
+
         private void StartWatcherExecute() 
         {
             AddLog("StartWatcherExecute()");

@@ -195,9 +195,16 @@
         </Grid>
 
 
-        <Border DockPanel.Dock="Top">
+        <Border DockPanel.Dock="Top" Margin="5">
             <ListBox x:Name="listBox1" ItemsSource="{Binding Logs, Mode=OneWay,UpdateSourceTrigger=PropertyChanged, NotifyOnTargetUpdated=True}" 
-                      TargetUpdated="ListBox_TargetUpdated"/>
+                      TargetUpdated="ListBox_TargetUpdated">
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="コピー" Command="{Binding ListBoxCopyCommand}"/>>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+
+            </ListBox>
         </Border>
  
     </DockPanel>
