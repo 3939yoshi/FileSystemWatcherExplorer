@@ -75,6 +75,11 @@ A.txtを操作した場合の結果。
 **NotifyFilesはFileName DirectoryName LastWriteを設定時**
 
 
+| A | B  |
+| --- | --- |
+| C | D |
+
+
 | ★2★  | 対象ディレクトリ A.TXT状態 なし | 対象ディレクトリ A.TXT状態 0バイト | 対象ディレクトリ A.TXT状態 1バイト以上 |
 | --- | --- | --- |
 
