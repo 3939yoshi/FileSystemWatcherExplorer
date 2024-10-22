@@ -13,6 +13,7 @@ CreatedやChangedのイベントが複数回発生する場合があるのでその動作を確認する。
 IsFileExistsAndUnlocked()関数でファイルが存在とロックされていなことを確認する。
 
 
+
 ```
         // ファイルが存在して非ロックか。
         private static bool IsFileExistsAndUnlocked(string path, out string falseMessage)
@@ -72,8 +73,9 @@ A.txtを操作した場合の結果。
 
 **NotifyFilesはFileName DirectoryName LastWriteを設定時**
 
+
 | ★   |対象ディレクトリ<br>A.TXT状態<br>なし|対象ディレクトリ<br>A.TXT状態<br>0バイト|対象ディレクトリ<br>A.TXT状態<br>1バイト以上 |
-|-|-|-|
+|---|---|---|
 |Notepad<br>名前を付けて0バイト<br>保存|Created<br>Deleted<br>Created<br>Canged|Changed|Changed|
 |Notepad<br>名前を付けて数バイト<br>保存|Created<br>Deleted<br>Created<br>Canged|Changed|Changed|
 |Rename                   |Renamed|×|×|
@@ -89,6 +91,7 @@ A.txtを操作した場合の結果。
 |Ctrl + V 移動 数バイト   |Changed<br>Changed|×|×|
 |Ctrl + V コピー 0バイト  |Changed<br>Changed|×|×|
 |Ctrl + V コピー 数バイト |Changed<br>Changed<br>Changed|×|×|
+
 
 
 
