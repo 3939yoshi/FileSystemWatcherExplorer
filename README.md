@@ -84,23 +84,32 @@ A.txtを操作した場合の結果。
 | --- | --- | --- | --- |
 |Notepad 名前を付けて0バイト 保存 |Created<br>Deleted<br>Created<br>Canged|Changed|Changed|
 |Notepad<br>名前を付けて数バイト<br>保存|Created<br>Deleted<br>Created<br>Canged|Changed|Changed|
-|Rename                   |Renamed|×|×|
-|ドラッグ 移動 0バイト    |Created|×|×|
-|ドラッグ 移動 数バイト   |Created|×|×|
-|ドラッグ コピー 0バイト  |Created<br>Changed|×|×|
-|ドラッグ コピー 数バイト |Created<br>Changed<br>Changed|×|×|
-|貼り付け 移動 0バイト    |Created|×|×|
-|貼り付け 移動 数バイト   |Created|×|×|
-|貼り付け コピー 0バイト  |Created<br>Changed|×|×|
-|貼り付け コピー 数0バイト|Created<br>Changed<br>Changed|×|×|
-|Ctrl + V 移動 0バイト    |Created<br>Changed<br>Changed|×|×|
-|Ctrl + V 移動 数バイト   |Changed<br>Changed|×|×|
-|Ctrl + V コピー 0バイト  |Changed<br>Changed|×|×|
-|Ctrl + V コピー 数バイト |Changed<br>Changed<br>Changed|×|×|
+|Rename                   |Renamed|不可|不可|
+|ドラッグ 移動 0バイト    |Created|?|?|
+|ドラッグ 移動 数バイト   |Created|?|?|
+|ドラッグ コピー 0バイト  |Created<br>Changed|?|?|
+|ドラッグ コピー 数バイト |Created<br>Changed<br>Changed|?|?|
+|貼り付け 移動 0バイト    |Created|?|?|
+|貼り付け 移動 数バイト   |Created|?|?|
+|貼り付け コピー 0バイト  |Created<br>Changed|?|?|
+|貼り付け コピー 数0バイト|Created<br>Changed<br>Changed|?|?|
+|Ctrl + V 移動 0バイト    |Created<br>Changed<br>Changed|?|?|
+|Ctrl + V 移動 数バイト   |Changed<br>Changed|?|?|
+|Ctrl + V コピー 0バイト  |Changed<br>Changed|?|?|
+|Ctrl + V コピー 数バイト |Changed<br>Changed<br>Changed|?|?|
 
-
+**note) ?は未調査**
 
 
 ### 付録1 
+
+#### note 1
+
+ NotifyFiles.LastWriteのOnChanged()は、
+監視対象ディレクトのサブディレクト内のファイルの作成や削除でも発生する。
+
+これはディレクトリのLastWriteTimeがそのディレクトリ内のファイルの作成や削除で更新されるためである。
+
+
 
 
