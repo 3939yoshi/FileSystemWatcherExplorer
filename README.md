@@ -5,7 +5,60 @@
 ### 1. 概要
 FileSystemWatcherは、ファイル システムの変更通知を待機し、ディレクトリまたはディレクトリ内のファイルが変更されたときにイベントを発生させます。
 
+作成したアプリケーションで時々指定ディレクトリにファイルがおかれたことを検出できない問題が発生しているので挙動確認用アプリケーションを作成した。
+
+
 CreatedやChangedのイベントが複数回発生する場合があるのでその動作を確認する。
+
+IsFileExistsAndUnlocked()関数でファイルが存在とロックされていなことを確認する。
+
+
+```
+        // ファイルが存在して非ロックか。
+        private static bool IsFileExistsAndUnlocked(string path, out string falseMessage)
+        {
+            falseMessage = string.Empty;
+            FileStream? stream = null;
+            if (! File.Exists(path))
+            {
+                falseMessage = "File.Exiets() is false.";
+                return false; 
+            }
+            try
+            {
+                stream = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+            }
+            catch(DirectoryNotFoundException e)
+            {
+                falseMessage = e.Message;
+                return false;
+            }
+            catch(FileNotFoundException e)
+            {
+                falseMessage = e.Message;
+                return false;
+            }
+            catch(IOException e)
+            {
+                falseMessage = e.Message;
+                return false;
+            }
+            catch(Exception e)
+            {
+                falseMessage = e.Message;
+                return false;
+            }
+            finally
+            {
+                if (stream != null)
+                {
+                    stream.Close();
+                }
+            }
+            return true;
+        }
+
+```
 
 
 ### 2. 環境
