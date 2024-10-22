@@ -10,11 +10,11 @@ FileSystemWatcherは、ファイル システムの変更通知を待機し、ディレクトリまたはディ
 
 CreatedやChangedのイベントが複数回発生する場合があるのでその動作を確認する。
 
-IsFileExistsAndUnlocked()関数でファイルが存在とロックされていなことを確認する。
+IsFileExistsAndUnlocked()関数でファイルが存在しロックされていなことを確認する。
 
 
 
-```csharp:AAAA
+```csharp: AAAA
         // ファイルが存在して非ロックか。
         private static bool IsFileExistsAndUnlocked(string path, out string falseMessage)
         {
@@ -63,9 +63,13 @@ IsFileExistsAndUnlocked()関数でファイルが存在とロックされていなことを確認する。
 
 
 ### 2. 環境
+Windows
+
 Microsoft Visual Studio Community 2022 C#
 
 .NET + WPF + Prism
+
+![画像](fig1.png)
 
 
 ### 3.結果(参考)
