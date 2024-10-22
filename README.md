@@ -75,7 +75,7 @@ A.txtを操作した場合の結果。
 **NotifyFilesはFileName DirectoryName LastWriteを設定時**
 
 
-| ★   |対象ディレクトリ<br>A.TXT状態<br>なし|対象ディレクトリ<br>A.TXT状態<br>0バイト|対象ディレクトリ<br>A.TXT状態<br>1バイト以上 |
+| ★   |対象ディレクトリ A.TXT状態 なし|対象ディレクトリ A.TXT状態 0バイト|対象ディレクトリ<br>A.TXT状態<br>1バイト以上 |
 | --- | --- | --- |
 |Notepad<br>名前を付けて0バイト<br>保存|Created<br>Deleted<br>Created<br>Canged|Changed|Changed|
 |Notepad<br>名前を付けて数バイト<br>保存|Created<br>Deleted<br>Created<br>Canged|Changed|Changed|
