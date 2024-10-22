@@ -64,6 +64,7 @@ IsFileExistsAndUnlocked()関数でファイルが存在とロックされていなことを確認する。
 
 ### 2. 環境
 Microsoft Visual Studio Community 2022 C#
+
 .NET + WPF + Prism
 
 
@@ -75,7 +76,7 @@ A.txtを操作した場合の結果。
 
 
 | ★   |対象ディレクトリ<br>A.TXT状態<br>なし|対象ディレクトリ<br>A.TXT状態<br>0バイト|対象ディレクトリ<br>A.TXT状態<br>1バイト以上 |
-|---|---|---|
+| --- | --- | --- |
 |Notepad<br>名前を付けて0バイト<br>保存|Created<br>Deleted<br>Created<br>Canged|Changed|Changed|
 |Notepad<br>名前を付けて数バイト<br>保存|Created<br>Deleted<br>Created<br>Canged|Changed|Changed|
 |Rename                   |Renamed|×|×|
