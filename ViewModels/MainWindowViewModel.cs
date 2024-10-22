@@ -248,7 +248,7 @@ namespace FileSystemWatcherExplorer.ViewModels
             int id = System.Threading.Thread.CurrentThread.ManagedThreadId;
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"Changed {e.ChangeType}  {DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}  ThreadId = {id}");
-            sb.AppendLine($"    FilePath {e.FullPath}");
+            sb.AppendLine($"    FilePath {e.FullPath}  isFileExistsAndUnlocked = {isFileExistsAndUnlocked}  {falseMessage}");
             if (isFileExistsAndUnlocked)
             {
                 FileInfo info = new FileInfo(e.FullPath);
