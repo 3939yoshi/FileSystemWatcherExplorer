@@ -14,7 +14,7 @@ IsFileExistsAndUnlocked()関数でファイルが存在とロックされていなことを確認する。
 
 
 
-```
+```csharp:AAAA
         // ファイルが存在して非ロックか。
         private static bool IsFileExistsAndUnlocked(string path, out string falseMessage)
         {
@@ -74,10 +74,6 @@ A.txtを操作した場合の結果。
 
 **NotifyFilesはFileName DirectoryName LastWriteを設定時**
 
-
-| ★2★ | 対象ディレクトリ A.TXT状態 なし  | 対象ディレクトリ A.TXT状態 0バイト | 対象ディレクトリ A.TXT状態 1バイト以上 |
-| --- | --- | --- | --- |
-| C | D | E | |
 
 
 | ★2★  | 対象ディレクトリ<br> A.TXT状態<br> なし | 対象ディレクトリ<br> A.TXT状態<br> 0バイト | 対象ディレクトリ<br> A.TXT状態<br> 1バイト以上 |
