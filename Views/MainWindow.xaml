@@ -11,6 +11,9 @@
         prism:ViewModelLocator.AutoWireViewModel="True">
     <Window.Resources>
         <converter:WatcherConverter  x:Key="WatcherConverter"/>
+        <Style TargetType="{x:Type CheckBox}">
+            <Setter Property="Margin" Value="0,5,0,5"/>
+        </Style>
     </Window.Resources>
     
     <DockPanel>
@@ -19,7 +22,7 @@
                 <MenuItem Header="Exit"/>
             </MenuItem>
         </Menu>
-        <Grid DockPanel.Dock="Top" Width="600" Height="130">
+        <Grid DockPanel.Dock="Top" Width="600">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -29,7 +32,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="1.5*"/>
                 <ColumnDefinition Width="5*"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
@@ -37,18 +40,18 @@
             <CheckBox Grid.Column="1" Content="EnableRaisingEvents" IsChecked="{Binding EnableRaisingEvents}" IsEnabled="False"/>
             
             <Label Grid.Row="1" Content="Filter"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Filter}" IsEnabled="{Binding IsEnableChange}"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Filter}" IsEnabled="{Binding IsEnableChange}" VerticalAlignment="Center"/>
             
             <Label  Grid.Row="2" Content="Filters" />
-            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Filters}" IsEnabled="{Binding IsEnableChange}"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Filters}" IsEnabled="{Binding IsEnableChange}" VerticalAlignment="Center"/>
 
             <CheckBox Grid.Row="3" Grid.Column="1" Content="IncludeSubdirectories" IsChecked="{Binding IncludeSubdirectories}" IsEnabled="{Binding IsEnableChange}"/>
 
             <Label Grid.Row="4" Content="InternalBufferSize"/>
-            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding InternalBuffersize}" IsEnabled="{Binding IsEnableChange}"/>
+            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding InternalBuffersize}" IsEnabled="{Binding IsEnableChange}" VerticalAlignment="Center"/>
 
             <Label Grid.Row="5" Content="Path"/>
-            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Path}" IsEnabled="{Binding IsEnableChange}"/>
+            <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Path}" IsEnabled="{Binding IsEnableChange}" VerticalAlignment="Center"/>
             <Button  Grid.Row="5" Grid.Column="2" Content="選ぶ" Command="{Binding SelectDirectoryCommand}" IsEnabled="{Binding IsEnableChange}"/>
 
         </Grid>
@@ -60,7 +63,7 @@
         </StackPanel>
         
         
-        <Grid DockPanel.Dock="Top" Width="600" Height="300">
+        <Grid DockPanel.Dock="Top" Width="600" >
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -188,7 +191,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Label Content="{Binding CurrentWactherState, Converter={StaticResource WatcherConverter}}" />
+            <Label Content="{Binding CurrentWactherState, Converter={StaticResource WatcherConverter}}" VerticalAlignment="Center" />
             <Button Grid.Column="1" Content="開始" Margin="10" Command="{Binding StartWatcherCommand}"/>
             <Button Grid.Column="2" Content="停止" Margin="10" Command="{Binding StopWatcherCommand}"/>
 

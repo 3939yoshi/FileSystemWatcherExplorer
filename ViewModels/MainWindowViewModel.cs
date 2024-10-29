@@ -371,10 +371,14 @@ namespace FileSystemWatcherExplorer.ViewModels
 
         private void StartWatcherExecute() 
         {
-            AddLog("StartWatcherExecute()");
-            Debug.WriteLine("StartWatcherExecute()");
+            string str1 = "\nStartWatcherExecute()";
+            AddLog(str1);
+            Debug.WriteLine(str1);
 
             UpdateSetting();
+            string str2 = $"    NotifyFilters = {_fileSystemWatcher.NotifyFilter}";
+            AddLog(str2);
+            Debug.WriteLine(str2);
 
             CurrentWactherState = _fileSystemWatcher.EnableRaisingEvents;
             IsEnableChange = !CurrentWactherState;
